@@ -3,9 +3,8 @@ import { useState, useRef, useCallback } from 'react';
 export function useIncidentSocket() {
   const [isConnected, setIsConnected] = useState(false);
   const [isSwarmRunning, setIsSwarmRunning] = useState(false);
-  const [activeIncident, setActiveIncident] = useState('bug_db_pool.py');
   
-  // Real-time text streams for each of the 5 agents
+  // Real-time agent text streams
   const [agentStreams, setAgentStreams] = useState({
     detective: { text: '', status: 'idle', skill: 'StackTraceParser' },
     architect: { text: '', status: 'idle', skill: 'CodeDiffSynthesizer' },
@@ -14,17 +13,16 @@ export function useIncidentSocket() {
     communicator: { text: '', status: 'idle', skill: 'SlackNotifierAPI' },
   });
 
-  // Dynamic incident classification telemetry extracted live
+  // Dynamic incident classification telemetry extracted live by Detective Agent
   const [incidentClassification, setIncidentClassification] = useState(null);
 
   const socketRef = useRef(null);
 
-  const triggerSwarm = useCallback((incidentFile = activeIncident) => {
-    setActiveIncident(incidentFile);
+  const triggerSwarm = useCallback(() => {
     setIsSwarmRunning(true);
     setIncidentClassification(null);
 
-    // Reset stream buffers
+    // Reset streams
     setAgentStreams({
       detective: { text: '', status: 'typing', skill: 'StackTraceParser' },
       architect: { text: '', status: 'idle', skill: 'CodeDiffSynthesizer' },
@@ -42,8 +40,8 @@ export function useIncidentSocket() {
 
     ws.onopen = () => {
       setIsConnected(true);
-      // Request specific incident scenario payload
-      ws.send(JSON.stringify({ incident: incidentFile }));
+      // Trigger execution stream
+      ws.send(JSON.stringify({ action: 'start_telemetry_triage' }));
     };
 
     ws.onmessage = (event) => {
@@ -65,20 +63,25 @@ export function useIncidentSocket() {
           };
         });
 
-        // Extract Telemetry Badge info from Detective logs
-        if (agent === 'detective' && text.includes('Ingesting Telemetry for')) {
-          setIncidentClassification({
-            filename: incidentFile,
-            status: 'ANALYZING',
-            priority: 'P1-CRITICAL',
-          });
+        // Parse Autonomous Classification Metadata from Detective output stream
+        if (agent === 'detective') {
+          if (text.includes('Ingesting Telemetry for [')) {
+            const match = text.match(/Ingesting Telemetry for \[(.*?)\]/);
+            if (match) {
+              setIncidentClassification({
+                filename: match[1],
+                type: 'AUTONOMOUS DETECTED CRASH',
+                status: 'ANALYZING',
+              });
+            }
+          }
         }
 
         if (status === 'done' && agent === 'communicator') {
           setIsSwarmRunning(false);
         }
       } catch (err) {
-        console.error('Error parsing WebSocket message frame:', err);
+        console.error('Error parsing WebSocket frame:', err);
       }
     };
 
@@ -92,7 +95,7 @@ export function useIncidentSocket() {
       setIsConnected(false);
       setIsSwarmRunning(false);
     };
-  }, [activeIncident]);
+  }, []);
 
   const disconnect = useCallback(() => {
     if (socketRef.current) {
@@ -103,8 +106,6 @@ export function useIncidentSocket() {
   return {
     isConnected,
     isSwarmRunning,
-    activeIncident,
-    setActiveIncident,
     agentStreams,
     incidentClassification,
     triggerSwarm,

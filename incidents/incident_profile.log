@@ -1,0 +1,6 @@
+[2026-07-15 20:46:01,891] ERROR in app.auth.profiles: Failed to render profile badge for active session
+Traceback (most recent call last):
+  File "incidents/bug_user_profile.py", line 6, in format_user_badge
+    role = user_data["role"]
+KeyError: 'role'
+  Payload: {"username": "johndoe", "email": "john@example.com"}

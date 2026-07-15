@@ -1,0 +1,5 @@
+[2026-07-15 20:52:40,119] SECURITY ALERT in app.rbac.evaluator: Privilege Leak Detected!
+Traceback (most recent call last):
+  File "incidents/bug_cache_leak.py", line 12, in get_user_permissions
+    user_perms.append("admin")
+AssertionError: Guest user 'usr_4401' elevated to ['read', 'admin'] due to shared roles_cache contamination across concurrent sessions.

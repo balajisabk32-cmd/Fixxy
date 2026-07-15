@@ -1,0 +1,8 @@
+[2026-07-15 20:55:10,771] FATAL SERVER CRASH in app.database.pool: Connection pool Starvation!
+Traceback (most recent call last):
+  File "incidents/bug_db_pool.py", line 18, in fetch_user_orders
+    conn = db_pool.get_connection()
+  File "incidents/bug_db_pool.py", line 8, in get_connection
+    raise RuntimeError(f"ConnectionPoolExhausted: All {self.max_connections} DB pool slots are in use.")
+RuntimeError: ConnectionPoolExhausted: All 5 DB pool slots are in use.
+  Impact: 503 Service Unavailable — Server HTTP worker pool frozen waiting for database connections.

@@ -1,0 +1,6 @@
+[2026-07-15 20:54:33,019] CRITICAL in app.gateway.rate_limiter: Worker pool blocked waiting for concurrency semaphore
+Traceback (most recent call last):
+  File "incidents/bug_rate_limiter.py", line 13, in process_rate_limited_request
+    raise ValueError(f"Rate limit exceeded for IP {client_ip}")
+ValueError: Rate limit exceeded for IP 192.168.1.50
+  Note: Thread 'Worker-4' failed to release lock; subsequent 240 incoming requests timed out waiting for lock acquisition.

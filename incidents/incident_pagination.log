@@ -1,0 +1,6 @@
+[2026-07-15 20:47:19,412] ERROR in app.api.pagination: Page slice request out of range
+Traceback (most recent call last):
+  File "incidents/bug_pagination.py", line 8, in get_page_items
+    first_item = items[start_index]
+IndexError: list index out of range
+  Payload: {"items_len": 5, "page": 3, "page_size": 10}

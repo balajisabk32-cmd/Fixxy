@@ -1,0 +1,6 @@
+[2026-07-15 20:45:12,104] ERROR in app.services.billing: Failed to compute itemized discount payload
+Traceback (most recent call last):
+  File "incidents/bug_discount.py", line 7, in calculate_discount
+    average_price = total_amount / total_items
+ZeroDivisionError: division by zero
+  Payload: {"total_amount": 150.0, "total_items": 0}

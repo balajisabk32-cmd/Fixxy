@@ -1,0 +1,6 @@
+[2026-07-15 20:50:01,304] ERROR in app.auth.session_manager: Unhandled exception during session Garbage Collection
+Traceback (most recent call last):
+  File "incidents/bug_session_cleanup.py", line 14, in evict_expired_sessions
+    for session_id, data in active_sessions.items():
+RuntimeError: dictionary changed size during iteration
+  Active session count prior to crash: 14,208 entries

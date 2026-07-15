@@ -1,0 +1,8 @@
+[2026-07-15 20:53:11,502] FATAL in app.hr.org_engine: Stack overflow during reporting tree rollup
+Traceback (most recent call last):
+  File "incidents/bug_org_tree.py", line 13, in get_reporting_chain
+    return [employee_id] + get_reporting_chain(manager_id)
+  File "incidents/bug_org_tree.py", line 13, in get_reporting_chain
+    return [employee_id] + get_reporting_chain(manager_id)
+  [Previous line repeated 996 more times]
+RecursionError: maximum recursion depth exceeded in comparison

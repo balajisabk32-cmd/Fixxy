@@ -1,0 +1,6 @@
+[2026-07-15 20:51:14,881] CRITICAL in app.security.jwt_verifier: JWT Auth Middleware failure
+Traceback (most recent call last):
+  File "incidents/bug_token_validator.py", line 9, in verify_token_expiration
+    if now > expires_at:
+TypeError: can't compare offset-naive and offset-aware datetimes
+  Claims: {"sub": "usr_9921", "exp": 1784149800.0}
